@@ -1,0 +1,19 @@
+---
+title: "Welcome To My Blog"
+author: "Suraj K Nair"
+date: "2023-05-17"
+categories: [news]
+---
+
+This is the first blog post. Welcome!
+
+![](thumbnail.jpg)
+
+To me robotics is a fascinating discipline that combines engineering, computer science, and artificial intelligence. ie its the coolest thing ever. As a member of the Agile Robotics and Perception Lab(ARPL) at NYU I have the opportunity to work with this cutting edge technology. 
+
+I will be using this blog to post about projects I'm working on or even random things I find interesting. I have a lot of plans in store for this summer, so I am writing this blog as a record of everything I'm doing. I'm halfway through my Masters in Mechatronics and Robotics and this blog has been a long time coming. 
+
+
+I believe that robotics has the power to revolutionize the way we live, work, and interact with the world around us. Through this blog, I wish to share my passion for robotics and record my journey through this vast field.
+
+So, buckle up and get ready to embark on a thrilling journey into the realm of robotics. Let's explore the limitless possibilities and discover the future that robots hold for us all.

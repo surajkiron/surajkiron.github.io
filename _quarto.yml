@@ -1,0 +1,21 @@
+project:
+  type: website
+  output-dir: docs
+website:
+  title: "Portfolio"
+  navbar:
+    right:
+      - about.qmd
+      - text: "Resume"
+        href: resume.pdf
+      - icon: github
+        href: https://github.com/surajkiron
+      - icon: linkedin
+        href: https://www.linkedin.com/in/suraj-kiron/
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+
+
+

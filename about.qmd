@@ -1,0 +1,40 @@
+---
+title: "About"
+image: profile.jpeg
+about:
+  template: trestles
+  links:
+   
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/suraj-kiron/
+    - icon: github
+      text: Github
+      href: https://github.com/surajkiron
+
+---
+
+### Suraj Kiron Nair
+
+:::{#hero-heading}
+
+I am a student pursuing my Masters in Mechatronics and Robotics at NYU Tandon.
+
+## Education
+
+NYU Tandon Institute of Technology | New York <br/>
+MS Mechatronics and Robotics | Sept 2022 - May 2024
+
+Ramaiah Institute of Technology | Bengaluru | India <br/>
+BE Mechanical Engineering | Sept 2015 - June 2021
+
+
+## Experience
+
+ARPL | Graduate Engineer | Jan 2023 - present
+
+ICER IISc | Research Assistant | June 2021 - May 2022 \n
+
+:::
+
+
