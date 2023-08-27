@@ -1,0 +1,17 @@
+---
+title: "Geometric Controller on SO3"
+author: "Suraj Nair"
+date: "2023-06-12"
+categories: [c++, ROS, Control Systems]
+image: "image.jpg"
+---
+
+Linear Control Systems like PID controllers or linear quadratic controllers are used ubliquitously to enhance the stability of quadrotors. Since these controllers are based on Euler angless,they exhibit singularities when representing complex rotational maneuvers of a quadrotor UAV,thereby fundamentally restricting their ability to track complex trajectories.
+
+Geometric control is concerned with the development of control systems for dynamic systems evolving on non linear manifolds (ex SO3: Rotation matrices, SE3: Homogenous Transforms, Quaternions etc) that cannot be globally identified with Euclidean spaces (non curvy spaces).In this project the dynamics of the UAV is expressed in quaternions.
+
+$$
+a^2 + b^2 = c^2
+$$
+
+$a + b$

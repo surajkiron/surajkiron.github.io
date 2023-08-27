@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Projects",
     "section": "",
-    "text": "Race Circuit Line Follower\n\n\n\n\n\n\n\nPID\n\n\nControl Systems\n\n\nopencv\n\n\npython\n\n\n\n\n\n\n\n\n\n\n\nMay 27, 2023\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nMay 17, 2023\n\n\nSuraj K Nair\n\n\n\n\n\n\nNo matching items"
+    "text": "L1 Augmented Geometric Controller\n\n\n\n\n\n\n\nc++\n\n\nROS\n\n\nControl Systems\n\n\n\n\n\n\n\n\n\n\n\nJun 16, 2023\n\n\nSuraj Nair\n\n\n\n\n\n\n  \n\n\n\n\nGeometric Controller on SO3\n\n\n\n\n\n\n\nc++\n\n\nROS\n\n\nControl Systems\n\n\n\n\n\n\n\n\n\n\n\nJun 12, 2023\n\n\nSuraj Nair\n\n\n\n\n\n\n  \n\n\n\n\nRace Circuit Line Follower\n\n\n\n\n\n\n\nPID\n\n\nControl Systems\n\n\nopencv\n\n\npython\n\n\n\n\n\n\n\n\n\n\n\nMay 27, 2023\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nMay 17, 2023\n\n\nSuraj K Nair\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/welcome/index.html",
@@ -75,5 +75,19 @@
     "title": "Race Circuit Line Follower",
     "section": "Results and Code",
     "text": "Results and Code\n\nFinal Code"
+  },
+  {
+    "objectID": "posts/2_Geomtric_Controller/index.html",
+    "href": "posts/2_Geomtric_Controller/index.html",
+    "title": "Geometric Controller on SO3",
+    "section": "",
+    "text": "Linear Control Systems like PID controllers or linear quadratic controllers are used ubliquitously to enhance the stability of quadrotors. Since these controllers are based on Euler angless,they exhibit singularities when representing complex rotational maneuvers of a quadrotor UAV,thereby fundamentally restricting their ability to track complex trajectories.\nGeometric control is concerned with the development of control systems for dynamic systems evolving on non linear manifolds (ex SO3: Rotation matrices, SE3: Homogenous Transforms, Quaternions etc) that cannot be globally identified with Euclidean spaces (non curvy spaces).In this project the dynamics of the UAV is expressed in quaternions.\n\\[\na^2 + b^2 = c^2\n\\]"
+  },
+  {
+    "objectID": "posts/3_L1_Adaptive_Control/index.html",
+    "href": "posts/3_L1_Adaptive_Control/index.html",
+    "title": "L1 Augmented Geometric Controller",
+    "section": "",
+    "text": "Linear Control Systems like PID controllers or linear quadratic controllers are used ubliquitously to enhance the stability of quadrotors. Since these controllers are based on Euler angless,they exhibit singularities when representing complex rotational maneuvers of a quadrotor UAV,thereby fundamentally restricting their ability to track complex trajectories.\nGeometric control is concerned with the development of control systems for dynamic systems evolving on non linear manifolds (ex SO3: Rotation matrices, SE3: Homogenous Transforms, Quaternions etc) that cannot be globally identified with Euclidean spaces (non curvy spaces).In this project the dynamics of the UAV is expressed in quaternions."
   }
 ]

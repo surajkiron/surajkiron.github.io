@@ -16,5 +16,11 @@
   },
   "posts/Line Follower/index.qmd": {
     "index.html": "6ac776f2"
+  },
+  "posts/2_Geomtric_Controller/index.qmd": {
+    "index.html": "add82744"
+  },
+  "posts/3_L1_Adaptive_Control/index.qmd": {
+    "index.html": "1bc8588c"
   }
 }
