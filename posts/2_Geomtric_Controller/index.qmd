@@ -4,6 +4,7 @@ author: "Suraj Nair"
 date: "2023-06-12"
 categories: [c++, ROS, Control Systems]
 image: "image.jpg"
+draft: true
 ---
 
 Linear Control Systems like PID controllers or linear quadratic controllers are used ubliquitously to enhance the stability of quadrotors. Since these controllers are based on Euler angless,they exhibit singularities when representing complex rotational maneuvers of a quadrotor UAV,thereby fundamentally restricting their ability to track complex trajectories.

@@ -1,0 +1,16 @@
+---
+title: "State Estimation with Extended Kalman Filter"
+author: "Suraj Kiron Nair"
+date: "2024-01-20"
+categories: [State Estimation, Filters, MATLAB]
+image: "image.jpg"
+draft: "true"
+---
+
+In this project I use a Extended Kalman Filter to Localize a quadrotor. I use the body frame acceleration and angular velocity from the onboard
+IMU as your control inputs. The measurement will be given by the pose or velocity from the Vicon.
+Vicon data is in the following format:
+$$ [x, y, z, roll, pitch, yaw, v_x, v_y, v_z, \omega_x, \omega_y, \omega_z]^T $$
+
+The on board processor of the robot collects synchronized camera and IMU data and sends them to the mission computer. At this stage, the camera data should not be used. The sensor data is decoded into standard MATLAB format. Note that since the sensor data is transmitted via wireless network, there may
+or may not be a sensor packet available during a specific iteration of the control loop. A sensor packet is a struct that contains following fields:
