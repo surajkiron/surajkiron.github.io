@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Suraj Kiron Nair">
-<meta name="dcterms.date" content="2023-02-26">
+<meta name="dcterms.date" content="2023-03-05">
 
-<title>Portfolio - State Estimation with Extended Kalman Filter</title>
+<title>Portfolio - Vision Based Pose and Velocity Estimation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -110,10 +110,10 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">State Estimation with Extended Kalman Filter</h1>
+      <h1 class="title">Vision Based Pose and Velocity Estimation</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">State Estimation</div>
-                <div class="quarto-category">Filters</div>
+                <div class="quarto-category">Computer Vision</div>
+                <div class="quarto-category">Visual Odometry</div>
                 <div class="quarto-category">MATLAB</div>
                 <div class="quarto-category">Quadrotors</div>
               </div>
@@ -133,7 +133,7 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">February 26, 2023</p>
+        <p class="date">March 5, 2023</p>
       </div>
     </div>
     
@@ -151,169 +151,130 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>In this project I use a Extended Kalman Filter to Localize a quadrotor. I use the body frame acceleration and angular velocity from the onboard IMU as your control inputs. The measurement will be given by the pose or velocity from the Vicon. Vicon data is in the following format: <span class="math display">\[ [x, y, z, roll, pitch, yaw, v_x, v_y, v_z, \omega_x, \omega_y, \omega_z]^T \]</span></p>
-<p>The on board processor of the robot collects synchronized camera and IMU data and sends them to the mission computer. At this stage, the camera data should not be used. The sensor data is decoded into standard MATLAB format. Note that since the sensor data is transmitted via wireless network, there may or may not be a sensor packet available during a specific iteration of the control loop. A sensor packet is a struct that contains following fields:</p>
-<div class="quarto-figure quarto-figure-center">
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>This project is composed of 2 parts. In part one we have to determine the position and orientation of a quadrotor flying over a Mat of April Tags. For the second part, I estimate the linear and angular velocity of the drone using Optical Flow.</p>
+<p>The data for this project was collected using a Nano+ quadrotor that was either held by hand or flown through a prescribed trajectory over a mat of AprilTags, each of which has a unique ID.Thes images captured by the quadrotor are in a time sequence. We know the coordinates of each point on the April Tag mat. Using this information we can find the position and orientation of the quadrotor in the world frame.</p>
+<p>The intrinsic camera calibration matrix and the transformation between the camera and the robot center are known. These Two photos are included to visualize the camera-robot body transform</p>
+<div id="fig-elephants" class="quarto-layout-panel">
 <figure class="figure">
-<p><img src="1_EKF.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Sensor Data</figcaption><p></p>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-surus" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="side_view.jpg" class="img-fluid figure-img" data-ref-parent="fig-elephants"></p>
+<p></p><figcaption class="figure-caption">(a) Side View</figcaption><p></p>
 </figure>
 </div>
-<p>The goal is to use an Extended Kalman Filter (EKF) to estimate the position, velocity, and orientation, and sensor biases of an Micro Aerial Vehicle. The Vicon velocity is given in the world frame, whereas the angular rate in the body frame of the robot. Furthermore, I use the body frame acceleration and angular velocity from the on board IMU as the inputs.</p>
-<p>I have implemented 2 versions of the filter. In the first one, the measurement update is given by the position and orientation from vicon, in the second one I use only the velocity from the Vicon.. In both parts, the process model is the same.</p>
-<section id="assumptions" class="level2">
-<h2 class="anchored" data-anchor-id="assumptions">Assumptions</h2>
-<p>We make the assumption that the noise in the readings obtained from the IMU and Vicon adhere to a normal distribution. Additionally, we can assume the state derivative to be both continuous and differentiable, allowing us to linearize it. Based on these assumptions, we can utilize the EKF algorithm for predicting the state.</p>
+</div>
+<div class="quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-hanno" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="top_view.jpeg" class="img-fluid figure-img" data-ref-parent="fig-elephants"></p>
+<p></p><figcaption class="figure-caption">(b) Top View</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;1: Camera to Body transformation</figcaption><p></p>
+</figure>
+</div>
+<p>The data contains a struct array of image data called data, which holds all of the data necessary to do pose estimation. This includes the time stamps, April Tag IDs observed for each time stamp and the location of the April Tag corners and centers in image coordinates.</p>
+<p>This is a rectified image of the April Tag Mat.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="aprilTagMat.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">April Tag Mat</figcaption><p></p>
+</figure>
+</div>
 </section>
-<section id="the-process-model" class="level2">
-<h2 class="anchored" data-anchor-id="the-process-model">The Process Model: <br></h2>
-<p>The state <span class="math inline">\(\mathbf{X}\)</span> is given by <span class="math display">\[\mathbf{X} =
-\begin{bmatrix}
-\mathbf{x_1} \\
-\mathbf{x_2} \\
-\mathbf{x_3} \\
-\mathbf{x_4} \\
-\mathbf{x_5}
-\end{bmatrix}
-=
-\begin{bmatrix}
-\mathbf{p} \\
-\mathbf{q} \\
-\mathbf{\dot{p}} \\
-\mathbf{b_g} \\
-\mathbf{b_a}
-\end{bmatrix}
-=
-\begin{bmatrix}
-\mathbf{position} \\
-\mathbf{orientation} \\
-\mathbf{linear \, velocity} \\
-\mathbf{gyroscope \, bias} \\
-\mathbf{accelerometer \, bias}
-\end{bmatrix}
+<section id="part-i-pose-estimation" class="level2">
+<h2 class="anchored" data-anchor-id="part-i-pose-estimation">Part I: Pose Estimation</h2>
+<section id="methodology" class="level3">
+<h3 class="anchored" data-anchor-id="methodology">Methodology</h3>
+<p>The goal of this section is to use this data to determine the pose of the quadrotor. I have to use the points of the corners of each AprilTag along with their corresponding positions in the image to estimate the pose of the camera, and then the drone body. I do this by computing the homography matrix H for the points whose position we know in both the image plane as well as the real-world. The homography matrix converts points in the 3D world frame to the 2D image plane. Here, all the real-world points have Z coordinate as 0. Hence:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Picture1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<p>We get the Projective transformation equation as</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Picture2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<p>We need 4 correspondences to constrain all 8 degrees of freedom. The elements are stored in row order In general, a Projective transformation can map any 4 points to any 4 points, with no triplets of collinear points. However, using more than 4 correspondences makes the results more robust. Stacking together all correspondences for a given time stamp we get the <span class="math inline">\(A\)</span> matrix. Hence,</p>
+<p><span class="math display">\[Ah = 0\]</span></p>
+<p>We perform least squares optimization by taking the SVD decomposition of matrix A.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Picture3.png" class="img-fluid figure-img" style="width:35.0%"></p>
+</figure>
+</div>
+<p>We get the homography matrix from 9th coloumn of the V matrix.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Picture4.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>From this we extract our Rotation matrix <span class="math inline">\((R)\)</span> and our Translation Vector <span class="math inline">\((T)\)</span>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Picture5.png" class="img-fluid figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p>The diagonal guarantees it is a rotation matrix with determinant 1. To find our estimate of the translation we just make sure it is in the right scale using the following.</p>
+<p><span class="math display">\[T = \hat{T}/||\hat{R_1}||\]</span></p>
+</section>
+</section>
+<section id="pose-tracking-results" class="level2">
+<h2 class="anchored" data-anchor-id="pose-tracking-results">Pose Tracking Results</h2>
+<p>The results show that the calculated pose (blue) is closely tracking the ground truth from the Vicon (red).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Picture6.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Dataset 1: Position and Orientation Tracking Results</figcaption><p></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Picture7.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Dataset 2: Position and Orientation Tracking Results</figcaption><p></p>
+</figure>
+</div>
+</section>
+<section id="part-ii-velocity-estimation" class="level2">
+<h2 class="anchored" data-anchor-id="part-ii-velocity-estimation">Part II: Velocity Estimation</h2>
+<section id="methodology-1" class="level3">
+<h3 class="anchored" data-anchor-id="methodology-1">Methodology</h3>
+<p>We first extract corners in each image. I used MATLAB’s built in corner detectors detectFASTfeatures to accomplish this. The extracted corners includes corners from the random scribble.</p>
+<p>After extracting corners, the next step is to compute the motion(Optical Flow) between these corners in two consecutive images. This is achieved using the Kanade-Lucas-Tomasi (KLT) feature tracker in MATLAB. Optical flow refers to the pattern of apparent motion of objects, surfaces, and edges in a visual scene caused by the relative motion between an observer and the scene.</p>
+<p>We need to solve the Motion Field Equation for the case of fixed depth. The Motion Field Equation relates the image plane velocities of the points (denoted by ( )) to the motion of the camera or object. This equation is based on the assumption of a fixed depth (denoted by ( Z )), where ( A(p) ) and ( B(p) ) are functions of the point coordinates in the image, and ( V ) and ( ) represent the linear and angular velocities, respectively. <span class="math display">\[ \dot{p} = \frac{1}{Z} A(p)V + B(p)\Omega\]</span> <span class="math display">\[\dot{p} = \frac{1}{Z} A(p)V + B(p)\Omega = \left( \frac{1}{Z} A(p) \quad B(p) \right) \begin{pmatrix} V \\ \Omega \end{pmatrix}\]</span></p>
+<p><strong>Least Squares Minimization</strong>: The estimated velocities are obtained by solving an optimization problem, where the sum of the squared differences between the observed image plane velocities (( _i )) and those predicted by the Motion Field Equation is minimized. This is a classic least squares problem</p>
+<p><span class="math display">\[V^*, \Omega^* = \arg\min_{V,\Omega} \sum_{i=1}^n \left\| \left( \frac{1}{Z_i} A(p_i) \quad B(p_i) \right) \begin{pmatrix} V \\ \Omega \end{pmatrix} - \dot{p}_i \right\|^2
 \]</span></p>
-<p>Differentiating we get the state transition equation as <span class="math display">\[
-\mathbf{\dot{X}} =
-\begin{bmatrix}
-\mathbf{x_3} \\
-G(\mathbf{x_2})^{-1} (\mathbf{\omega_m} - \mathbf{x_4} - \mathbf{n_g}) \\
-\mathbf{g}+R(\mathbf{x_2})(\mathbf{a_m}-\mathbf{x_5})-\mathbf{n_a} \\
-\mathbf{n_{bg}} \\
-\mathbf{n_{ba}}
-\end{bmatrix}
-=
-f(\mathbf{X}, \mathbf{u}, \mathbf{n})
-\]</span> Where <span class="math inline">\(G(\mathbf{x_2})^{-1}\)</span> maps orientation to angular velocity and is given by <span class="math display">\[
-G(\mathbf{x_2})^{-1} =
-\begin{bmatrix}
-\frac{\cos(z)\sin(y)}{\cos(y)} &amp; \frac{\sin(z)\sin(y)}{\cos(y)} &amp; 1\\
--\sin(z) &amp; \cos(z) &amp; 0\\
-\frac{\cos(z)}{\cos(y)} &amp; \frac{\sin(z)}{\cos(y)} &amp; 0
-\end{bmatrix}
+<p><strong>Velocity Estimation Equation</strong>: Finally, the solution to the optimization problem yields the estimated linear and angular velocities (( V^* ) and ( ^* )), encapsulated in a matrix form. The matrix ( H^+ ) is the pseudo-inverse of a matrix ( H ), which relates the observed velocities ( ) to the motion parameters ( V ) and ( ). The pseudo-inverse is used when the system of equations is either underdetermined or overdetermined, allowing for a least squares solution to the problem.</p>
+<p><span class="math display">\[\begin{pmatrix}
+V^* \\
+\Omega^*
+\end{pmatrix} = H^+ \dot{p}\]</span></p>
+</section>
+<section id="ransac-random-sample-consensus" class="level3">
+<h3 class="anchored" data-anchor-id="ransac-random-sample-consensus">RANSAC (RANdom SAmple Consensus)</h3>
+<p>RANSAC is an algorithm used for estimating parameters of a mathematical model from a set of data that may contain outliers. The algorithm works by iteratively selecting random subsets of data points and fitting a model to these subsets. The model parameters are then evaluated on the remaining data points, and if the model fits well to a sufficient number of points, it is considered a good fit and the algorithm terminates. The number of attempts(k) required to achieve a probability of success Psuccess is given by the equation <span class="math display">\[k = \frac{\log(1 - P_{\text{success}})}{\log(1 - e^{-M})}
 \]</span></p>
+<p>To implement RANSAC I use the following pseudocode <img src="Picture8.png" class="img-fluid" data-fig-align="center" alt="RANSAC pseudocode"></p>
 </section>
-<section id="prediction-step" class="level2">
-<h2 class="anchored" data-anchor-id="prediction-step">Prediction Step:</h2>
+<section id="veloctiy-estimation-results" class="level3">
+<h3 class="anchored" data-anchor-id="veloctiy-estimation-results">Veloctiy Estimation Results</h3>
+<p>The graph has a noticeable pattern of increased activity, particularly spikes, which could indicate rapid changes in altitude or disturbances affecting the drone’s movement. The predictions seems to be noisy need to experiment by tuning tracker parameters and using different tracker algorithms. Overall, the predictions track the true velocities closely but there is room for improvement.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="2_EKF.png" class="img-fluid figure-img" width="400"></p>
-<p></p><figcaption class="figure-caption">Prediction Equations</figcaption><p></p>
+<p><img src="Picture9.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Linear and Angular Velocity Tracking Results</figcaption><p></p>
 </figure>
 </div>
-<p>We use MATLAB symbolic library to determine <span class="math inline">\(A_t\)</span> and <span class="math inline">\(U_t\)</span>. <span class="math inline">\(Q_d\)</span> is the covariance of the IMU noise. In the prediction stage, the filter uses the system model to make a prediction of the next state of the system based on the current state and any control inputs from the IMU</p>
-</section>
-<section id="update-step" class="level2">
-<h2 class="anchored" data-anchor-id="update-step">Update Step:</h2>
-<p>The prediction is used to estimate the measurement that will be obtained at the next time step. During the correction stage, the filter incorporates both the predicted measurement and the actual measurement taken at the following time step to refine its assessment of the system’s state. The refined estimate is a weighted sum of the predicted state and the actual measurement, with the filter’s assessment of the uncertainty in both the model and the measurements used to determine the weighting of each component using the Kalman Gain.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="3_EKF.png" class="img-fluid figure-img" width="400"></p>
-<p></p><figcaption class="figure-caption">Update Equations</figcaption><p></p>
-</figure>
-</div>
-<p>Here the observation model <span class="math inline">\(\mathbf{z}\)</span> is given by <span class="math display">\[
-\mathbf{z}=
-\begin{bmatrix}
-\mathbf{p} \\
-\mathbf{q} \\
-\mathbf{r}
-\end{bmatrix}
-+
-\mathbf{v}
-=
-\mathbf{C_t X}+\mathbf{v}
-\]</span></p>
-<p>Where <span class="math inline">\(C_t\)</span> is a selection matrix. For case 1 we select position and orientation <span class="math display">\[
-C_t =
-\begin{bmatrix}
-I &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0\\
-0 &amp; I &amp; 0 &amp; 0 &amp; 0 &amp; 0
-\end{bmatrix}
-\]</span></p>
-<p>For case 2 we select Linear velocitiy <span class="math display">\[
-C_t =
-\begin{bmatrix}
-0 &amp; 0 &amp; I &amp; 0 &amp; 0 &amp; 0
-\end{bmatrix}
-\]</span></p>
-</section>
-<section id="results" class="level2">
-<h2 class="anchored" data-anchor-id="results">Results</h2>
-<p>I have compared both implementations of the Extended Kalman filter on 3 datasets. 3 being the most agressive flight.</p>
-<section id="case-1-dataset-1" class="level3">
-<h3 class="anchored" data-anchor-id="case-1-dataset-1">Case 1 Dataset 1</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="1_dataset1.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">State Estimation Dataset 1</figcaption><p></p>
-</figure>
-</div>
-</section>
-<section id="case-1-dataset-2" class="level3">
-<h3 class="anchored" data-anchor-id="case-1-dataset-2">Case 1 Dataset 2</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="1_dataset2.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">State Estimation Dataset 2</figcaption><p></p>
-</figure>
-</div>
-</section>
-<section id="case-1-dataset-3" class="level3">
-<h3 class="anchored" data-anchor-id="case-1-dataset-3">Case 1 Dataset 3</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="1_dataset3.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">State Estimation Dataset 3</figcaption><p></p>
-</figure>
-</div>
-</section>
-<section id="case-2-dataset-1" class="level3">
-<h3 class="anchored" data-anchor-id="case-2-dataset-1">Case 2 Dataset 1</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="2_dataset1.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">State Estimation Dataset 1</figcaption><p></p>
-</figure>
-</div>
-</section>
-<section id="case-2-dataset-2" class="level3">
-<h3 class="anchored" data-anchor-id="case-2-dataset-2">Case 2 Dataset 2</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="2_dataset2.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">State Estimation Dataset 2: shows yaw drift</figcaption><p></p>
-</figure>
-</div>
-</section>
-<section id="case-2-dataset-3" class="level3">
-<h3 class="anchored" data-anchor-id="case-2-dataset-3">Case 2 Dataset 3</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="2_dataset3.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">State Estimation Dataset 3: shows yaw drift</figcaption><p></p>
-</figure>
-</div>
-<p>The results show that the yaw estimate of the quadrotor drifts if we use only velocity measurements to update the EKF. Measuring pose gives us better tracking performance.</p>
 
 
 </section>

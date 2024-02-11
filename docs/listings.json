@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/5_RLAN_2_VO/index.html",
+      "/posts/4_RLAN_1_EKF/index.html",
       "/posts/1_Line_ Follower/index.html",
       "/posts/welcome/index.html"
     ]
