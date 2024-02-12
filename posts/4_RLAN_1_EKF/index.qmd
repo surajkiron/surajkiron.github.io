@@ -143,3 +143,5 @@ I have compared both implementations of the Extended Kalman filter on 3 datasets
 ![State Estimation Dataset 3: shows yaw drift](2_dataset3.png)
 
 The results show that the yaw estimate of the quadrotor drifts if we use only velocity measurements to update the EKF. Measuring pose gives us better tracking performance.
+
+[Next Project: Vision Based Pose and Velocity Estimation](..\5_RLAN_2_VO\index.qmd)

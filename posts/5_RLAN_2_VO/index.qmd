@@ -80,7 +80,7 @@ We first extract corners in each image. I used MATLAB’s built in corner detect
 
 After extracting corners, the next step is to compute the motion(Optical Flow) between these corners in two consecutive images. This is achieved using the Kanade-Lucas-Tomasi (KLT) feature tracker in MATLAB. Optical flow refers to the pattern of apparent motion of objects, surfaces, and edges in a visual scene caused by the relative motion between an observer and the scene.
 
-We need to solve the Motion Field Equation for the case of fixed depth. The Motion Field Equation relates the image plane velocities of the points (denoted by \( \dot{p} \)) to the motion of the camera or object. This equation is based on the assumption of a fixed depth (denoted by \( Z \)), where \( A(p) \) and \( B(p) \) are functions of the point coordinates in the image, and \( V \) and \( \Omega \) represent the linear and angular velocities, respectively.
+We need to solve the Motion Field Equation for the case of fixed depth. The Motion Field Equation relates the image plane velocities of the points (denoted by $( \dot{p} )$) to the motion of the camera or object. This equation is based on the assumption of a fixed depth (denoted by $( Z )$), where$ ( A(p) )$ and $( B(p) )$ are functions of the point coordinates in the image, and $( V )$ and $( \Omega )$ represent the linear and angular velocities, respectively.
 $$ \dot{p} = \frac{1}{Z} A(p)V + B(p)\Omega$$
 $$\dot{p} = \frac{1}{Z} A(p)V + B(p)\Omega = \left( \frac{1}{Z} A(p) \quad B(p) \right) \begin{pmatrix} V \\ \Omega \end{pmatrix}$$
 
@@ -89,7 +89,7 @@ $$\dot{p} = \frac{1}{Z} A(p)V + B(p)\Omega = \left( \frac{1}{Z} A(p) \quad B(p) 
 $$V^*, \Omega^* = \arg\min_{V,\Omega} \sum_{i=1}^n \left\| \left( \frac{1}{Z_i} A(p_i) \quad B(p_i) \right) \begin{pmatrix} V \\ \Omega \end{pmatrix} - \dot{p}_i \right\|^2
 $$
 
-**Velocity Estimation Equation**: Finally, the solution to the optimization problem yields the estimated linear and angular velocities (\( V^* \) and \( \Omega^* \)), encapsulated in a matrix form. The matrix \( H^+ \) is the pseudo-inverse of a matrix \( H \), which relates the observed velocities \( \dot{p} \) to the motion parameters \( V \) and \( \Omega \). The pseudo-inverse is used when the system of equations is either underdetermined or overdetermined, allowing for a least squares solution to the problem.
+**Velocity Estimation Equation**: Finally, the solution to the optimization problem yields the estimated linear and angular velocities $( V^*)$ and $( \Omega^* )$, encapsulated in a matrix form. The matrix $ ( H^+ )$ is the pseudo-inverse of a matrix $( H )$, which relates the observed velocities $( \dot{p} )$ to the motion parameters $( V )$ and $( \Omega )$. The pseudo-inverse is used when the system of equations is either underdetermined or overdetermined, allowing for a least squares solution to the problem.
 
 $$\begin{pmatrix}
 V^* \\
@@ -111,5 +111,6 @@ To implement RANSAC I use the following pseudocode
 The graph has a noticeable pattern of increased activity, particularly spikes, which could indicate rapid changes in altitude or disturbances affecting the drone's movement. The predictions seems to be noisy need to experiment by tuning tracker parameters and using different tracker algorithms.
 Overall, the predictions track the true velocities closely but there is room for improvement.
 
-![Linear and Angular Velocity Tracking Results](Picture9.png){fig-align="center"}
+![Linear and Angular Velocity Estimation Results](Picture9.png){fig-align="center"}
 
+[Next Project: Unscented Kalman Filter](..\6_RLAN_3_UKF\index.qmd)

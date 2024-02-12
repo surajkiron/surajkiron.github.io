@@ -2,7 +2,7 @@
 title: "Welcome To My Blog"
 author: "Suraj K Nair"
 date: "2022-08-17"
-categories: [news]
+categories: []
 ---
 
 This is the first blog post. Welcome!

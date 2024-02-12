@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Suraj Kiron Nair">
-<meta name="dcterms.date" content="2023-02-26">
+<meta name="dcterms.date" content="2023-05-20">
 
-<title>Portfolio - State Estimation with Extended Kalman Filter</title>
+<title>Portfolio - Unscented Kalman Filter</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,7 +61,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -110,7 +109,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">State Estimation with Extended Kalman Filter</h1>
+      <h1 class="title">Unscented Kalman Filter</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">State Estimation</div>
                 <div class="quarto-category">Filters</div>
@@ -133,7 +132,7 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">February 26, 2023</p>
+        <p class="date">May 20, 2023</p>
       </div>
     </div>
     
@@ -151,173 +150,42 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>In this project I use a Extended Kalman Filter to Localize a quadrotor. I use the body frame acceleration and angular velocity from the onboard IMU as your control inputs. The measurement will be given by the pose or velocity from the Vicon. Vicon data is in the following format: <span class="math display">\[ [x, y, z, roll, pitch, yaw, v_x, v_y, v_z, \omega_x, \omega_y, \omega_z]^T \]</span></p>
-<p>The on board processor of the robot collects synchronized camera and IMU data and sends them to the mission computer. At this stage, the camera data should not be used. The sensor data is decoded into standard MATLAB format. Note that since the sensor data is transmitted via wireless network, there may or may not be a sensor packet available during a specific iteration of the control loop. A sensor packet is a struct that contains following fields:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="1_EKF.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Sensor Data</figcaption><p></p>
-</figure>
-</div>
-<p>The goal is to use an Extended Kalman Filter (EKF) to estimate the position, velocity, and orientation, and sensor biases of an Micro Aerial Vehicle. The Vicon velocity is given in the world frame, whereas the angular rate in the body frame of the robot. Furthermore, I use the body frame acceleration and angular velocity from the on board IMU as the inputs.</p>
-<p>I have implemented 2 versions of the filter. In the first one, the measurement update is given by the position and orientation from vicon, in the second one I use only the velocity from the Vicon.. In both parts, the process model is the same.</p>
-<section id="assumptions" class="level2">
-<h2 class="anchored" data-anchor-id="assumptions">Assumptions</h2>
-<p>We make the assumption that the noise in the readings obtained from the IMU and Vicon adhere to a normal distribution. Additionally, we can assume the state derivative to be both continuous and differentiable, allowing us to linearize it. Based on these assumptions, we can utilize the EKF algorithm for predicting the state.</p>
+<p>In this project, I develop an Unscented Kalman Filter (UKF) to fuse the inertial data already used in project 1 and the vision-based pose and velocity estimation developed in project 2.</p>
+<section id="unscented-kalman-filter-a-deep-dive" class="level2">
+<h2 class="anchored" data-anchor-id="unscented-kalman-filter-a-deep-dive">Unscented Kalman Filter: A Deep Dive</h2>
+<p>The Unscented Kalman Filter is an advanced state estimation algorithm that addresses the limitations of the traditional Kalman Filter by effectively handling nonlinear systems. The UKF operates on the principle of capturing the mean and covariance of a probability distribution through a deterministic sampling technique known as the Unscented Transform.</p>
+<section id="the-unscented-transform" class="level3">
+<h3 class="anchored" data-anchor-id="the-unscented-transform">The Unscented Transform</h3>
+<p>The Unscented Transform selects a set of points (sigma points) around the mean state in such a way that their mean and covariance match the original distribution. These points are then propagated through the nonlinear system model, allowing for an accurate approximation of the resulting mean and covariance without the need for linearization.</p>
 </section>
-<section id="the-process-model" class="level2">
-<h2 class="anchored" data-anchor-id="the-process-model">The Process Model: <br></h2>
-<p>The state <span class="math inline">\(\mathbf{X}\)</span> is given by <span class="math display">\[\mathbf{X} =
-\begin{bmatrix}
-\mathbf{x_1} \\
-\mathbf{x_2} \\
-\mathbf{x_3} \\
-\mathbf{x_4} \\
-\mathbf{x_5}
-\end{bmatrix}
-=
-\begin{bmatrix}
-\mathbf{p} \\
-\mathbf{q} \\
-\mathbf{\dot{p}} \\
-\mathbf{b_g} \\
-\mathbf{b_a}
-\end{bmatrix}
-=
-\begin{bmatrix}
-\mathbf{position} \\
-\mathbf{orientation} \\
-\mathbf{linear \, velocity} \\
-\mathbf{gyroscope \, bias} \\
-\mathbf{accelerometer \, bias}
-\end{bmatrix}
-\]</span></p>
-<p>Differentiating we get the state transition equation as <span class="math display">\[
-\mathbf{\dot{X}} =
-\begin{bmatrix}
-\mathbf{x_3} \\
-G(\mathbf{x_2})^{-1} (\mathbf{\omega_m} - \mathbf{x_4} - \mathbf{n_g}) \\
-\mathbf{g}+R(\mathbf{x_2})(\mathbf{a_m}-\mathbf{x_5})-\mathbf{n_a} \\
-\mathbf{n_{bg}} \\
-\mathbf{n_{ba}}
-\end{bmatrix}
-=
-f(\mathbf{X}, \mathbf{u}, \mathbf{n})
-\]</span> Where <span class="math inline">\(G(\mathbf{x_2})^{-1}\)</span> maps orientation to angular velocity and is given by <span class="math display">\[
-G(\mathbf{x_2})^{-1} =
-\begin{bmatrix}
-\frac{\cos(z)\sin(y)}{\cos(y)} &amp; \frac{\sin(z)\sin(y)}{\cos(y)} &amp; 1\\
--\sin(z) &amp; \cos(z) &amp; 0\\
-\frac{\cos(z)}{\cos(y)} &amp; \frac{\sin(z)}{\cos(y)} &amp; 0
-\end{bmatrix}
-\]</span></p>
+<section id="mathematical-formulation" class="level3">
+<h3 class="anchored" data-anchor-id="mathematical-formulation">Mathematical Formulation</h3>
+<p>The UKF update cycle can be broken down into the following steps:</p>
+<ol type="1">
+<li><p><strong>Selection of Sigma Points:</strong> Sigma points are chosen to capture the mean and covariance of the state estimate. This selection is critical for accurately representing the state’s uncertainty.</p></li>
+<li><p><strong>Prediction Step:</strong> The sigma points are propagated through the system’s dynamics model to predict the state at the next time step. This step involves calculating the predicted state mean and covariance, incorporating the process noise.</p></li>
+<li><p><strong>Update Step:</strong> Upon receiving a new measurement, the sigma points are updated to reflect the new information. This involves computing the Kalman gain, updating the state estimate, and adjusting the covariance to reduce uncertainty based on the measurement noise.</p></li>
+</ol>
+<p>The equations for these steps are intricate, involving matrix operations to ensure that the predicted state and covariance accurately reflect the system’s dynamics and the measurements’ influence.</p>
 </section>
-<section id="prediction-step" class="level2">
-<h2 class="anchored" data-anchor-id="prediction-step">Prediction Step:</h2>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="2_EKF.png" class="img-fluid figure-img" width="400"></p>
-<p></p><figcaption class="figure-caption">Prediction Equations</figcaption><p></p>
-</figure>
-</div>
-<p>We use MATLAB symbolic library to determine <span class="math inline">\(A_t\)</span> and <span class="math inline">\(U_t\)</span>. <span class="math inline">\(Q_d\)</span> is the covariance of the IMU noise. In the prediction stage, the filter uses the system model to make a prediction of the next state of the system based on the current state and any control inputs from the IMU</p>
 </section>
-<section id="update-step" class="level2">
-<h2 class="anchored" data-anchor-id="update-step">Update Step:</h2>
-<p>The prediction is used to estimate the measurement that will be obtained at the next time step. During the correction stage, the filter incorporates both the predicted measurement and the actual measurement taken at the following time step to refine its assessment of the system’s state. The refined estimate is a weighted sum of the predicted state and the actual measurement, with the filter’s assessment of the uncertainty in both the model and the measurements used to determine the weighting of each component using the Kalman Gain.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="3_EKF.png" class="img-fluid figure-img" width="400"></p>
-<p></p><figcaption class="figure-caption">Update Equations</figcaption><p></p>
-</figure>
-</div>
-<p>Here the observation model <span class="math inline">\(\mathbf{z}\)</span> is given by <span class="math display">\[
-\mathbf{z}=
-\begin{bmatrix}
-\mathbf{p} \\
-\mathbf{q} \\
-\mathbf{r}
-\end{bmatrix}
-+
-\mathbf{v}
-=
-\mathbf{C_t X}+\mathbf{v}
-\]</span></p>
-<p>Where <span class="math inline">\(C_t\)</span> is a selection matrix. For case 1 we select position and orientation <span class="math display">\[
-C_t =
-\begin{bmatrix}
-I &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0\\
-0 &amp; I &amp; 0 &amp; 0 &amp; 0 &amp; 0
-\end{bmatrix}
-\]</span></p>
-<p>For case 2 we select Linear velocitiy <span class="math display">\[
-C_t =
-\begin{bmatrix}
-0 &amp; 0 &amp; I &amp; 0 &amp; 0 &amp; 0
-\end{bmatrix}
-\]</span></p>
+<section id="results-and-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-visualization">Results and Visualization</h2>
+<p>Our implementation showed promising results, closely aligning with the actual state measured by the Motion Capture (Mocap) Vicon System. Below are some visual representations of our findings:</p>
+<ul>
+<li><p><strong>Figure 1:</strong> Shows the estimated state versus the actual state for Dataset 1 in Part 1, illustrating the UKF’s accuracy in tracking the drone’s position and orientation.</p></li>
+<li><p><strong>Figure 2:</strong> Demonstrates the drift encountered in Part 2 when relying solely on velocity measurements, highlighting the challenges of maintaining accurate orientation estimation without direct positional data.</p></li>
+</ul>
+<p><img src="image-url-here.png" class="img-fluid" alt="Estimated State vs.&nbsp;Actual State"> <em>Figure 1: State Estimation Results for Part 1</em></p>
+<p><img src="image-url-here.png" class="img-fluid" alt="Orientation Drift in Part 2"> <em>Figure 2: Orientation Drift in Part 2</em></p>
+<p>These images provide a visual understanding of the UKF’s performance and the impact of relying on different sets of measurements for state estimation.</p>
 </section>
-<section id="results" class="level2">
-<h2 class="anchored" data-anchor-id="results">Results</h2>
-<p>I have compared both implementations of the Extended Kalman filter on 3 datasets. 3 being the most agressive flight.</p>
-<section id="case-1-dataset-1" class="level3">
-<h3 class="anchored" data-anchor-id="case-1-dataset-1">Case 1 Dataset 1</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="1_dataset1.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">State Estimation Dataset 1</figcaption><p></p>
-</figure>
-</div>
-</section>
-<section id="case-1-dataset-2" class="level3">
-<h3 class="anchored" data-anchor-id="case-1-dataset-2">Case 1 Dataset 2</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="1_dataset2.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">State Estimation Dataset 2</figcaption><p></p>
-</figure>
-</div>
-</section>
-<section id="case-1-dataset-3" class="level3">
-<h3 class="anchored" data-anchor-id="case-1-dataset-3">Case 1 Dataset 3</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="1_dataset3.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">State Estimation Dataset 3</figcaption><p></p>
-</figure>
-</div>
-</section>
-<section id="case-2-dataset-1" class="level3">
-<h3 class="anchored" data-anchor-id="case-2-dataset-1">Case 2 Dataset 1</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="2_dataset1.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">State Estimation Dataset 1</figcaption><p></p>
-</figure>
-</div>
-</section>
-<section id="case-2-dataset-2" class="level3">
-<h3 class="anchored" data-anchor-id="case-2-dataset-2">Case 2 Dataset 2</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="2_dataset2.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">State Estimation Dataset 2: shows yaw drift</figcaption><p></p>
-</figure>
-</div>
-</section>
-<section id="case-2-dataset-3" class="level3">
-<h3 class="anchored" data-anchor-id="case-2-dataset-3">Case 2 Dataset 3</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="2_dataset3.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">State Estimation Dataset 3: shows yaw drift</figcaption><p></p>
-</figure>
-</div>
-<p>The results show that the yaw estimate of the quadrotor drifts if we use only velocity measurements to update the EKF. Measuring pose gives us better tracking performance.</p>
-<p><a href="../../posts/5_RLAN_2_VO/index.html">Next Project: Vision Based Pose and Velocity Estimation</a></p>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The project underscored the effectiveness of the Unscented Kalman Filter in handling nonlinearities and uncertainties inherent in real-world robotic localization and navigation tasks. Through this hands-on experience, we gained deeper insights into the challenges and complexities of state estimation, paving the way for future advancements in robotic autonomy.</p>
+<p>(Note: Replace <code>image-url-here</code> with the actual URLs or paths to the images you intend to include in your blog post.)</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

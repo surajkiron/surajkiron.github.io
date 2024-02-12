@@ -1,0 +1,50 @@
+---
+title: "Unscented Kalman Filter"
+author: "Suraj Kiron Nair"
+date: "2023-05-20"
+categories: [State Estimation, Filters, MATLAB, Quadrotors]
+image: "image.jpg"
+draft: "true"
+---
+In this project, I develop an Unscented Kalman Filter (UKF) to fuse the inertial data already
+used in project 1 and the vision-based pose and velocity estimation developed in project 2.
+
+## Unscented Kalman Filter: A Deep Dive
+
+The Unscented Kalman Filter is an advanced state estimation algorithm that addresses the limitations of the traditional Kalman Filter by effectively handling nonlinear systems. The UKF operates on the principle of capturing the mean and covariance of a probability distribution through a deterministic sampling technique known as the Unscented Transform.
+
+### The Unscented Transform
+
+The Unscented Transform selects a set of points (sigma points) around the mean state in such a way that their mean and covariance match the original distribution. These points are then propagated through the nonlinear system model, allowing for an accurate approximation of the resulting mean and covariance without the need for linearization.
+
+### Mathematical Formulation
+
+The UKF update cycle can be broken down into the following steps:
+
+1. **Selection of Sigma Points:** Sigma points are chosen to capture the mean and covariance of the state estimate. This selection is critical for accurately representing the state's uncertainty.
+
+2. **Prediction Step:** The sigma points are propagated through the system's dynamics model to predict the state at the next time step. This step involves calculating the predicted state mean and covariance, incorporating the process noise.
+
+3. **Update Step:** Upon receiving a new measurement, the sigma points are updated to reflect the new information. This involves computing the Kalman gain, updating the state estimate, and adjusting the covariance to reduce uncertainty based on the measurement noise.
+
+The equations for these steps are intricate, involving matrix operations to ensure that the predicted state and covariance accurately reflect the system's dynamics and the measurements' influence.
+
+## Results and Visualization
+
+Our implementation showed promising results, closely aligning with the actual state measured by the Motion Capture (Mocap) Vicon System. Below are some visual representations of our findings:
+
+- **Figure 1:** Shows the estimated state versus the actual state for Dataset 1 in Part 1, illustrating the UKF's accuracy in tracking the drone's position and orientation.
+
+- **Figure 2:** Demonstrates the drift encountered in Part 2 when relying solely on velocity measurements, highlighting the challenges of maintaining accurate orientation estimation without direct positional data.
+
+![Estimated State vs. Actual State](image-url-here) *Figure 1: State Estimation Results for Part 1*
+
+![Orientation Drift in Part 2](image-url-here) *Figure 2: Orientation Drift in Part 2*
+
+These images provide a visual understanding of the UKF's performance and the impact of relying on different sets of measurements for state estimation.
+
+## Conclusion
+
+The project underscored the effectiveness of the Unscented Kalman Filter in handling nonlinearities and uncertainties inherent in real-world robotic localization and navigation tasks. Through this hands-on experience, we gained deeper insights into the challenges and complexities of state estimation, paving the way for future advancements in robotic autonomy.
+
+(Note: Replace `image-url-here` with the actual URLs or paths to the images you intend to include in your blog post.)

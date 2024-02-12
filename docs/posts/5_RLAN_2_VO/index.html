@@ -250,11 +250,11 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="methodology-1">Methodology</h3>
 <p>We first extract corners in each image. I used MATLAB’s built in corner detectors detectFASTfeatures to accomplish this. The extracted corners includes corners from the random scribble.</p>
 <p>After extracting corners, the next step is to compute the motion(Optical Flow) between these corners in two consecutive images. This is achieved using the Kanade-Lucas-Tomasi (KLT) feature tracker in MATLAB. Optical flow refers to the pattern of apparent motion of objects, surfaces, and edges in a visual scene caused by the relative motion between an observer and the scene.</p>
-<p>We need to solve the Motion Field Equation for the case of fixed depth. The Motion Field Equation relates the image plane velocities of the points (denoted by ( )) to the motion of the camera or object. This equation is based on the assumption of a fixed depth (denoted by ( Z )), where ( A(p) ) and ( B(p) ) are functions of the point coordinates in the image, and ( V ) and ( ) represent the linear and angular velocities, respectively. <span class="math display">\[ \dot{p} = \frac{1}{Z} A(p)V + B(p)\Omega\]</span> <span class="math display">\[\dot{p} = \frac{1}{Z} A(p)V + B(p)\Omega = \left( \frac{1}{Z} A(p) \quad B(p) \right) \begin{pmatrix} V \\ \Omega \end{pmatrix}\]</span></p>
+<p>We need to solve the Motion Field Equation for the case of fixed depth. The Motion Field Equation relates the image plane velocities of the points (denoted by <span class="math inline">\(( \dot{p} )\)</span>) to the motion of the camera or object. This equation is based on the assumption of a fixed depth (denoted by <span class="math inline">\(( Z )\)</span>), where$ ( A(p) )$ and <span class="math inline">\(( B(p) )\)</span> are functions of the point coordinates in the image, and <span class="math inline">\(( V )\)</span> and <span class="math inline">\(( \Omega )\)</span> represent the linear and angular velocities, respectively. <span class="math display">\[ \dot{p} = \frac{1}{Z} A(p)V + B(p)\Omega\]</span> <span class="math display">\[\dot{p} = \frac{1}{Z} A(p)V + B(p)\Omega = \left( \frac{1}{Z} A(p) \quad B(p) \right) \begin{pmatrix} V \\ \Omega \end{pmatrix}\]</span></p>
 <p><strong>Least Squares Minimization</strong>: The estimated velocities are obtained by solving an optimization problem, where the sum of the squared differences between the observed image plane velocities (( _i )) and those predicted by the Motion Field Equation is minimized. This is a classic least squares problem</p>
 <p><span class="math display">\[V^*, \Omega^* = \arg\min_{V,\Omega} \sum_{i=1}^n \left\| \left( \frac{1}{Z_i} A(p_i) \quad B(p_i) \right) \begin{pmatrix} V \\ \Omega \end{pmatrix} - \dot{p}_i \right\|^2
 \]</span></p>
-<p><strong>Velocity Estimation Equation</strong>: Finally, the solution to the optimization problem yields the estimated linear and angular velocities (( V^* ) and ( ^* )), encapsulated in a matrix form. The matrix ( H^+ ) is the pseudo-inverse of a matrix ( H ), which relates the observed velocities ( ) to the motion parameters ( V ) and ( ). The pseudo-inverse is used when the system of equations is either underdetermined or overdetermined, allowing for a least squares solution to the problem.</p>
+<p><strong>Velocity Estimation Equation</strong>: Finally, the solution to the optimization problem yields the estimated linear and angular velocities <span class="math inline">\(( V^*)\)</span> and <span class="math inline">\(( \Omega^* )\)</span>, encapsulated in a matrix form. The matrix $ ( H^+ )$ is the pseudo-inverse of a matrix <span class="math inline">\(( H )\)</span>, which relates the observed velocities <span class="math inline">\(( \dot{p} )\)</span> to the motion parameters <span class="math inline">\(( V )\)</span> and <span class="math inline">\(( \Omega )\)</span>. The pseudo-inverse is used when the system of equations is either underdetermined or overdetermined, allowing for a least squares solution to the problem.</p>
 <p><span class="math display">\[\begin{pmatrix}
 V^* \\
 \Omega^*
@@ -272,9 +272,10 @@ V^* \\
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="Picture9.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Linear and Angular Velocity Tracking Results</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Linear and Angular Velocity Estimation Results</figcaption><p></p>
 </figure>
 </div>
+<p><a href="../../posts/6_RLAN_3_UKF/index.html">Next Project: Unscented Kalman Filter</a></p>
 
 
 </section>
