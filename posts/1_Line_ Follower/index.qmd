@@ -2,7 +2,7 @@
 title: "Race Circuit Line Follower"
 author: "Suraj Kiron Nair"
 date: "2022-11-30"
-categories: [Control Systems,opencv, python]
+categories: [Control Systems,Computer Vision, Python]
 image: "thumb1.png"
 
 ---

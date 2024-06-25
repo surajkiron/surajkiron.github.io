@@ -2,7 +2,7 @@
 title: "State Estimation with Extended Kalman Filter"
 author: "Suraj Kiron Nair"
 date: "2023-02-26"
-categories: [State Estimation, Filters, MATLAB, Quadrotors]
+categories: [State Estimation, Localization, MATLAB, Quadrotors]
 image: "image.jpg"
 ---
 
@@ -53,28 +53,63 @@ $$\mathbf{X} =
 \end{bmatrix}
 $$
 
-Differentiating we get the state transition equation as
+Here $\mathbf{X} \in \mathbf{R}^{15}$ and $\mathbf{q} = [\phi, \theta, \psi] ^T = [roll, pitch, yaw]^T$.<br/>
+Using the properties of the distributions we can derive the state transition equations.<br/>
+
+We already have $\dot{\mathbf{p}}$ in the state vector.
+We can calculate  $\dot{\mathbf{q}}$  using the angular velocity measured by IMU $(\omega_m)$ which is expressed in body frame. Since the gyroscope noise is additive white noise $n_g \sim \mathit{N}(0,\mathit{Q})$.
 $$
-\mathbf{\dot{X}} = 
-\begin{bmatrix}
-\mathbf{x_3} \\
-G(\mathbf{x_2})^{-1} (\mathbf{\omega_m} - \mathbf{x_4} - \mathbf{n_g}) \\
-\mathbf{g}+R(\mathbf{x_2})(\mathbf{a_m}-\mathbf{x_5})-\mathbf{n_a} \\
-\mathbf{n_{bg}} \\
-\mathbf{n_{ba}}
-\end{bmatrix}
-=
-f(\mathbf{X}, \mathbf{u}, \mathbf{n})
+\omega_m = \omega + b_g + n_g
 $$
-Where $G(\mathbf{x_2})^{-1}$ maps orientation to angular velocity and is given by
 $$
-G(\mathbf{x_2})^{-1} = 
+\omega = \omega_m - b_g - n_g
+$$
+$G(q)$ is a transformation that maps the euler angle derivatives $(\dot{q} = [\dot{\phi}, \dot{\theta}, \dot{\psi}]^T)$  to angular velocity expressed in world frame.
+Where $G(\mathbf{q})^{-1}$ maps orientation to angular velocity and is given by. See [eqn 2.76 here](https://ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/documents/RobotDynamics2016/KinematicsSingleBody.pdf)
+$$
+G(\mathbf{q})^{-1} = 
 \begin{bmatrix}
 \frac{\cos(z)\sin(y)}{\cos(y)} & \frac{\sin(z)\sin(y)}{\cos(y)} & 1\\
 -\sin(z) & \cos(z) & 0\\
 \frac{\cos(z)}{\cos(y)} & \frac{\sin(z)}{\cos(y)} & 0
 \end{bmatrix}
 $$
+$$
+(\omega)_{world} = G(q) \dot{q}
+$$
+Since $\omega$ is expressed in the body frame it need to be rotated to be expressed with respect to the world using $R^w_b$.
+$$R^w_b \omega = G(q) \dot{q}$$
+
+Hence finally we get the euler angle derivatives to be
+$$\dot{q} = G(q)^{-1}R_b^w \omega$$
+$$\dot{q} = G(q)^{-1}R_b^w(\omega_m - b_g - n_g) $$
+
+Similarly for acceleration, since we have additive accelerometer noise. $n_a \sim \mathit{N}(0,\mathit{Q})$ The measured acceleration is given by.
+$$a_m = R_b^w(\ddot{p} - g) + b_a + n_a $$
+
+and let $\dot{b_g} = n_{bg}$ and $\dot{b_a} = n_{ba}$ be gyroscope noise and accelerometer white noise respectively.
+
+Differentiating we get the state transition equation as
+$$
+\mathbf{\dot{X}}=
+\begin{bmatrix}
+\mathbf{\dot{p}} \\
+\mathbf{\dot{q}} \\
+\mathbf{\ddot{p }} \\
+\mathbf{\dot{b_g}} \\
+\mathbf{\dot{b_a}}
+\end{bmatrix} = 
+\begin{bmatrix}
+\mathbf{x_3} \\
+G(\mathbf{q})^{-1}R_b^w (\mathbf{\omega_m} - \mathbf{b_g} - \mathbf{n_g})\\
+\mathbf{g}+R_b^w(\mathbf{a_m}-\mathbf{b_a}-\mathbf{n_a}) \\
+\mathbf{n_{bg}} \\
+\mathbf{n_{ba}}
+\end{bmatrix}
+=
+f(\mathbf{X}, \mathbf{u}, \mathbf{n})
+$$
+
 
 ## Prediction Step:
 ![Prediction Equations](2_EKF.png){width="400"}

@@ -2,7 +2,7 @@
 title: "Unscented Kalman Filter"
 author: "Suraj Kiron Nair"
 date: "2023-05-20"
-categories: [State Estimation, Filters, MATLAB, Quadrotors]
+categories: [State Estimation, Localization, MATLAB]
 image: "image.jpg"
 draft: "true"
 ---

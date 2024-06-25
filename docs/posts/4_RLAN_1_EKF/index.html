@@ -192,24 +192,42 @@ ul.task-list li input[type="checkbox"] {
 \mathbf{accelerometer \, bias}
 \end{bmatrix}
 \]</span></p>
-<p>Differentiating we get the state transition equation as <span class="math display">\[
-\mathbf{\dot{X}} =
-\begin{bmatrix}
-\mathbf{x_3} \\
-G(\mathbf{x_2})^{-1} (\mathbf{\omega_m} - \mathbf{x_4} - \mathbf{n_g}) \\
-\mathbf{g}+R(\mathbf{x_2})(\mathbf{a_m}-\mathbf{x_5})-\mathbf{n_a} \\
-\mathbf{n_{bg}} \\
-\mathbf{n_{ba}}
-\end{bmatrix}
-=
-f(\mathbf{X}, \mathbf{u}, \mathbf{n})
-\]</span> Where <span class="math inline">\(G(\mathbf{x_2})^{-1}\)</span> maps orientation to angular velocity and is given by <span class="math display">\[
-G(\mathbf{x_2})^{-1} =
+<p>Here <span class="math inline">\(\mathbf{X} \in \mathbf{R}^{15}\)</span> and <span class="math inline">\(\mathbf{q} = [\phi, \theta, \psi] ^T = [roll, pitch, yaw]^T\)</span>.<br> Using the properties of the distributions we can derive the state transition equations.<br></p>
+<p>We already have <span class="math inline">\(\dot{\mathbf{p}}\)</span> in the state vector. We can calculate <span class="math inline">\(\dot{\mathbf{q}}\)</span> using the angular velocity measured by IMU <span class="math inline">\((\omega_m)\)</span> which is expressed in body frame. Since the gyroscope noise is additive white noise <span class="math inline">\(n_g \sim \mathit{N}(0,\mathit{Q})\)</span>. <span class="math display">\[
+\omega_m = \omega + b_g + n_g
+\]</span> <span class="math display">\[
+\omega = \omega_m - b_g - n_g
+\]</span> <span class="math inline">\(G(q)\)</span> is a transformation that maps the euler angle derivatives <span class="math inline">\((\dot{q} = [\dot{\phi}, \dot{\theta}, \dot{\psi}]^T)\)</span> to angular velocity expressed in world frame. Where <span class="math inline">\(G(\mathbf{q})^{-1}\)</span> maps orientation to angular velocity and is given by. See <a href="https://ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/documents/RobotDynamics2016/KinematicsSingleBody.pdf">eqn 2.76 here</a> <span class="math display">\[
+G(\mathbf{q})^{-1} =
 \begin{bmatrix}
 \frac{\cos(z)\sin(y)}{\cos(y)} &amp; \frac{\sin(z)\sin(y)}{\cos(y)} &amp; 1\\
 -\sin(z) &amp; \cos(z) &amp; 0\\
 \frac{\cos(z)}{\cos(y)} &amp; \frac{\sin(z)}{\cos(y)} &amp; 0
 \end{bmatrix}
+\]</span> <span class="math display">\[
+(\omega)_{world} = G(q) \dot{q}
+\]</span> Since <span class="math inline">\(\omega\)</span> is expressed in the body frame it need to be rotated to be expressed with respect to the world using <span class="math inline">\(R^w_b\)</span>. <span class="math display">\[R^w_b \omega = G(q) \dot{q}\]</span></p>
+<p>Hence finally we get the euler angle derivatives to be <span class="math display">\[\dot{q} = G(q)^{-1}R_b^w \omega\]</span> <span class="math display">\[\dot{q} = G(q)^{-1}R_b^w(\omega_m - b_g - n_g) \]</span></p>
+<p>Similarly for acceleration, since we have additive accelerometer noise. <span class="math inline">\(n_a \sim \mathit{N}(0,\mathit{Q})\)</span> The measured acceleration is given by. <span class="math display">\[a_m = R_b^w(\ddot{p} - g) + b_a + n_a \]</span></p>
+<p>and let <span class="math inline">\(\dot{b_g} = n_{bg}\)</span> and <span class="math inline">\(\dot{b_a} = n_{ba}\)</span> be gyroscope noise and accelerometer white noise respectively.</p>
+<p>Differentiating we get the state transition equation as <span class="math display">\[
+\mathbf{\dot{X}}=
+\begin{bmatrix}
+\mathbf{\dot{p}} \\
+\mathbf{\dot{q}} \\
+\mathbf{\ddot{p }} \\
+\mathbf{\dot{b_g}} \\
+\mathbf{\dot{b_a}}
+\end{bmatrix} =
+\begin{bmatrix}
+\mathbf{x_3} \\
+G(\mathbf{q})^{-1}R_b^w (\mathbf{\omega_m} - \mathbf{b_g} - \mathbf{n_g})\\
+\mathbf{g}+R_b^w(\mathbf{a_m}-\mathbf{b_a}-\mathbf{n_a}) \\
+\mathbf{n_{bg}} \\
+\mathbf{n_{ba}}
+\end{bmatrix}
+=
+f(\mathbf{X}, \mathbf{u}, \mathbf{n})
 \]</span></p>
 </section>
 <section id="prediction-step" class="level2">

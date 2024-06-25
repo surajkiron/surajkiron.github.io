@@ -2,7 +2,7 @@
 title: "Vision Based Pose and Velocity Estimation"
 author: "Suraj Kiron Nair"
 date: "2023-03-5"
-categories: [Computer Vision, Visual Odometry, MATLAB, Quadrotors]
+categories: [Computer Vision, Localization, MATLAB]
 image: "image.jpeg"
 ---
 
