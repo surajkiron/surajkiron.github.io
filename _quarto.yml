@@ -17,7 +17,7 @@ website:
         href: https://www.linkedin.com/in/suraj-kiron/
 format:
   html:
-    theme: cosmo
+    theme: spacelab # spacelab litera flatly
     css: styles.css
 
 

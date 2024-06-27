@@ -2,7 +2,7 @@
 title: "About"
 image: profile.jpeg
 about:
-  template: trestles
+  template: solana
   links:
    
     - icon: linkedin
@@ -31,9 +31,15 @@ BE Mechanical Engineering | Sept 2015 - June 2021
 
 ## Experience
 
-ARPL | Graduate Engineer | Jan 2023 - present
+**Agile Robotics and Perception Lab (ARPL) | Research Assistant | Jan 2023 - present** <br/>
 
-ICER IISc | Research Assistant | June 2021 - May 2022 \n
+  - Implemented L1 controller, for my [Master's Project](https://ieeexplore.ieee.org/document/10478191)<br/>
+  - Worked on Modalai Voxl2 and Nvidia Orin based quadrotor  platforms<br/>
+  - Developed C++, ROS/ROS2 packages<br/>
+  - Flight tested quadrotors using Vicon and GPS<br/>
+  - System Integration and testing<br/>
+
+**ICER IISc | Research Assistant | June 2021 - May 2022** \n
 
 :::
 

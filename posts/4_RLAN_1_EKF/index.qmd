@@ -2,8 +2,8 @@
 title: "State Estimation with Extended Kalman Filter"
 author: "Suraj Kiron Nair"
 date: "2023-02-26"
-categories: [State Estimation, Localization, MATLAB, Quadrotors]
-image: "image.jpg"
+categories: [Localization, MATLAB]
+image: "image.png"
 ---
 
 In this project I use a Extended Kalman Filter to Localize a quadrotor. I use the body frame acceleration and angular velocity from the onboard

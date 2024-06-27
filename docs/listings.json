@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/8_Manipulator_Obstacle_Avoidance/index.html",
       "/posts/7_Manipulator_Kinematics/index.html",
       "/posts/5_RLAN_2_VO/index.html",
       "/posts/4_RLAN_1_EKF/index.html",
