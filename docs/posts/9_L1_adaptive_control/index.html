@@ -9,7 +9,7 @@
 <meta name="author" content="Suraj Kiron Nair">
 <meta name="dcterms.date" content="2023-05-20">
 
-<title>Unscented Kalman Filter – Portfolio</title>
+<title>L1 Adaptive Control – Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -69,35 +69,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -148,11 +119,11 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Unscented Kalman Filter</h1>
+      <h1 class="title">L1 Adaptive Control</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">State Estimation</div>
-                <div class="quarto-category">Localization</div>
-                <div class="quarto-category">MATLAB</div>
+                <div class="quarto-category">news</div>
+                <div class="quarto-category">code</div>
+                <div class="quarto-category">analysis</div>
               </div>
                   </div>
   </div>
@@ -189,63 +160,9 @@ window.Quarto = {
 
 
 
-<p>In this project, I develop an Unscented Kalman Filter (UKF) to fuse the inertial data already used in project 1 and the vision-based pose and velocity estimation developed in project 2.</p>
-<section id="unscented-kalman-filter-a-deep-dive" class="level2">
-<h2 class="anchored" data-anchor-id="unscented-kalman-filter-a-deep-dive">Unscented Kalman Filter: A Deep Dive</h2>
-<p>The Unscented Kalman Filter is an advanced state estimation algorithm that addresses the limitations of the traditional Kalman Filter by effectively handling nonlinear systems. The UKF operates on the principle of capturing the mean and covariance of a probability distribution through a deterministic sampling technique known as the Unscented Transform.</p>
-<section id="the-unscented-transform" class="level3">
-<h3 class="anchored" data-anchor-id="the-unscented-transform">The Unscented Transform</h3>
-<p>The Unscented Transform selects a set of points (sigma points) around the mean state in such a way that their mean and covariance match the original distribution. These points are then propagated through the nonlinear system model, allowing for an accurate approximation of the resulting mean and covariance without the need for linearization.</p>
-</section>
-<section id="mathematical-formulation" class="level3">
-<h3 class="anchored" data-anchor-id="mathematical-formulation">Mathematical Formulation</h3>
-<p>The UKF update cycle can be broken down into the following steps:</p>
-<ol type="1">
-<li><p><strong>Selection of Sigma Points:</strong> Sigma points are chosen to capture the mean and covariance of the state estimate. This selection is critical for accurately representing the state’s uncertainty.</p></li>
-<li><p><strong>Prediction Step:</strong> The sigma points are propagated through the system’s dynamics model to predict the state at the next time step. This step involves calculating the predicted state mean and covariance, incorporating the process noise.</p></li>
-<li><p><strong>Update Step:</strong> Upon receiving a new measurement, the sigma points are updated to reflect the new information. This involves computing the Kalman gain, updating the state estimate, and adjusting the covariance to reduce uncertainty based on the measurement noise.</p></li>
-</ol>
-<p>The equations for these steps are intricate, involving matrix operations to ensure that the predicted state and covariance accurately reflect the system’s dynamics and the measurements’ influence.</p>
-</section>
-</section>
-<section id="part-i" class="level2">
-<h2 class="anchored" data-anchor-id="part-i">Part I</h2>
-<p>The objective is to utilize the information from project 2 to approximate the status of the robot drone. The robot’s condition is made up of the ensuing variables: <span class="math display">\[ [x, y, z, roll, pitch, yaw, \dot{x}, \dot{y}, \dot{z}, g_x, g_y, g_z, a_x, a_y, a_z]^T \]</span> Additionally, <span class="math inline">\(g_x, g_y\)</span>, and <span class="math inline">\(g_z\)</span> denote the biases of the gyroscope in the <span class="math inline">\(x, y\)</span>, and <span class="math inline">\(z\)</span> axes of the robot’s body frame, respectively, while <span class="math inline">\(a_x, a_y\)</span>, and <span class="math inline">\(a_z\)</span> indicate the biases of the accelerometer in the <span class="math inline">\(x, y,\)</span> and $ z$ axes of the robot’s body frame. To illustrate the drone’s rotations, we will utilize the ZYX convention of Euler angle rotation.</p>
-<section id="results" class="level3">
-<h3 class="anchored" data-anchor-id="results">Results</h3>
-<p>Our implementation showed promising results, closely aligning with the actual state measured by the Motion Capture (Mocap) Vicon System. Below are some visual representations of our findings:</p>
-<p align="center">
-<img src="./images/result1.png" width="75%"><br> Part1 Dataset1 State Estimation Result
-</p>
-<p align="center">
-<img src="./images/result2.png" width="75%"><br> Part1 Dataset2 State Estimation Result
-</p>
-<p>The results show the estimated state versus the actual state for Dataset 1 and 2, illustrating the UKF’s accuracy in tracking the drone’s position and orientation.</p>
-<p>These images provide a visual understanding of the UKF’s performance and the impact of relying on different sets of measurements for state estimation.</p>
-</section>
-</section>
-<section id="part-2" class="level2">
-<h2 class="anchored" data-anchor-id="part-2">Part 2</h2>
-<p>The problem at hand involves using the Unscented Kalman Filter to predict the position, velocity, and orientation of a drone, with the help of only velocity measurements from the Vicon sensor and control inputs from the IMU. This means that the predictions for position and velocity are expected to be quite accurate, but the orientation in the z axis may drift due to the lack of Vicon measurements. The prediction step remains the same as in Part 1, but the observation model in the update step needs to be modified since the linear velocity data is in the camera frame and needs to be converted to the world frame. <span class="math display">\[Z_t = g(x_2, x_3, w^c_w) + v = R^C_B*R^B_W x_3 - R^C_BS(r^B_{BC}) R^B_C * w^C_W + v
-\]</span> Where: <span class="math inline">\(S\)</span> is the skew symmetric matrix of the vector that points from the camera to the body(IMU) expressed in the body frame and v is the noise.In the context of implementing the Unscented Kalman Filter, the problem is that the observation model is nonlinear. To approximate the Gaussian probability distribution of the output of the model, we need to perform the Unscented Transform, as we did in Part 1. However, unlike Part 1, the noises are not part of the dynamic equations and are just added at the end. Therefore, we do not need to augment the state vector. The mean of the output of the observation model and the covariance are calculated as in Part 1. The cross-covariance between input and output is also calculated using the cross-covariance matrix.</p>
-<p><span class="math display">\[{\mu_{k}=\sum_{i=0}^{2\pi}W_{i}^{(m)}\hat{\mathcal{Y}}_{k}^{(i)},}\]</span></p>
-<p><span class="math display">\[{S_{k}=\sum_{i=0}^{2\pi}W_{i}^{(c)}(\hat{\mathcal{\mathcal{Y}}}_{k}^{(i)}-\mu_{k})(\hat{\mathcal{\mathcal{Y}}_{k}}^{(i)}-\mu_{k})^{T}+R_{k},}\]</span></p>
-<p><span class="math display">\[{C_{k}=\sum_{i=0}^{2\pi}W_{i}^{(c)}(\mathcal{X}_{k}^{-(i)}-m_{k}^{-})(\hat{\mathcal{Y}}_{k}^{(i)}-\mu_{k})^{\top}.}\]</span></p>
-<p>We then update the mean and covariance using the following equations <span class="math display">\[K_k = C_k S_k^{-1} \]</span> <span class="math display">\[m_k = \bar{m}_{k} + K_k [y_k - \mu_k]\]</span> <span class="math display">\[p_k = \bar{p}_{k}- K_k S_k K_k^{\top}\]</span></p>
-</section>
-<section id="results-1" class="level2">
-<h2 class="anchored" data-anchor-id="results-1">Results</h2>
-<p align="center">
-<img src="./images/result3.png" width="75%"><br> Part 2 Dataset 1 State Estimation Results
-</p>
-<p align="center">
-<img src="./images/result4.png" width="75%"><br> Part 2 Dataset 2 State Estimation Results
-</p>
-<p>The results demonstrates the drift encountered when relying solely on velocity measurements, highlighting the challenges of maintaining accurate orientation estimation without direct positional data.</p>
-<p>The project underscored the effectiveness of the Unscented Kalman Filter in handling nonlinearities and uncertainties inherent in real-world robotic localization and navigation tasks. Through this hands-on experience, we gained deeper insights into the challenges and complexities of state estimation, paving the way for future advancements in robotic autonomy.</p>
+<p>This is a post with executable code.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
