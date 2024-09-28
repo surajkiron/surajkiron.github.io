@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Suraj Kiron Nair">
-<meta name="dcterms.date" content="2023-05-20">
+<meta name="dcterms.date" content="2024-07-20">
 
-<title>Post With Code – Portfolio</title>
+<title>Virtual Maze Exploration and Navigation – Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -71,10 +71,6 @@ ul.task-list li input[type="checkbox"] {
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Post With Code – Portfolio">
-<meta property="og:description" content="">
-<meta property="og:image" content="image.jpg">
-<meta property="og:site_name" content="Portfolio">
 </head>
 
 <body class="nav-fixed fullcontent">
@@ -123,11 +119,13 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Post With Code</h1>
+      <h1 class="title">Virtual Maze Exploration and Navigation</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">news</div>
-                <div class="quarto-category">code</div>
-                <div class="quarto-category">analysis</div>
+                <div class="quarto-category">SLAM</div>
+                <div class="quarto-category">Computer Vision</div>
+                <div class="quarto-category">Visual Odometry</div>
+                <div class="quarto-category">Python</div>
+                <div class="quarto-category">Localization</div>
               </div>
                   </div>
   </div>
@@ -145,7 +143,7 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 20, 2023</p>
+        <p class="date">July 20, 2024</p>
       </div>
     </div>
     
@@ -164,7 +162,14 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>This is a post with executable code.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/HBjKWXFlMuE?si=BFV4vJXtsrOL0gE7" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>For this project, the task was to explore a maze of images, mapping the environment as we navigated. Once the map was complete, we were given four target images, and the goal was to locate and navigate to these images as quickly as possible.</p>
+<p>This was a collaborative effort, where I experimented with various SLAM algorithms, such as ORB SLAM (2&amp;3) and Stella V SLAM. Unfortunately, these methods did not yield accurate results for multiple reasons. First, we had to overcome the Sim-to-Real gap, as SLAM techniques developed for real-world datasets struggled with the simulated environment. Estimating depth posed a major challenge, as implementing depth estimation techniques led to system lag and poor accuracy. Additionally, these algorithms relied on inertial data from IMU sensors for state estimation, but we only had access to visual data in the simulation. While these methods handled linear movement effectively, rotational movements caused severe drift and localization loss.</p>
+<p>We also tried computationally intensive approaches, such as visual reconstruction using COLMAP, which provided accurate results for smaller maps. However, for larger maps, the increased search space made these methods infeasible to run on our laptop hardware, and since speed was the main performance criterion, we couldn’t afford such solutions.</p>
+<p>Ultimately, we developed a custom lightweight approach using Visual Odometry. I implemented a method that utilized homogeneous transformations and the essential matrix to extract the pose (R, t) between frames. We experimented with different features (SIFT, ORB) and matching algorithms, eventually finding that SuperPoint and SuperGlue provided the best tracking performance. Although computationally heavier than traditional methods, the accuracy justified the trade-off.</p>
+<p>We also explored visual place recognition techniques like VLAD, NetVLAD, and Bag of Visual Words, settling on VLAD for its simplicity and effectiveness in our specific use case.</p>
+<p>Once the exploration phase was complete, our bot followed the previously mapped path to each target location. This approach allowed us to finish with the fastest time in the competition, earning recognition from Professor Chen Feng.</p>
+<p><a href="https://www.linkedin.com/posts/suraj-kiron_its-been-a-fun-semester-in-fall-2023-when-activity-7143833818326593537-I8CJ?utm_source=share&amp;utm_medium=member_desktop">LinkedIn Post</a></p>
 
 
 

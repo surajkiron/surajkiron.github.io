@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Projects",
     "section": "",
-    "text": "L1 Augmented Geometric Controller\n\n\n\n\n\n\nc++\n\n\nROS\n\n\nControl Systems\n\n\n\n\n\n\n\n\n\nJul 9, 2024\n\n\nSuraj Nair\n\n\n\n\n\n\n\n\n\n\n\n\nSCARA Manipulator: Kinematic Control Part II\n\n\n\n\n\n\nManipulators\n\n\nControl Systems\n\n\nMATLAB\n\n\n\n\n\n\n\n\n\nJun 26, 2024\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n\n\n\n\n\n\nSCARA Manipulator: Kinematic Control Part I\n\n\n\n\n\n\nManipulators\n\n\nControl Systems\n\n\nMATLAB\n\n\n\n\n\n\n\n\n\nJun 25, 2024\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n\n\n\n\n\n\nVision Based Pose and Velocity Estimation\n\n\n\n\n\n\nComputer Vision\n\n\nLocalization\n\n\nMATLAB\n\n\n\n\n\n\n\n\n\nMar 5, 2023\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n\n\n\n\n\n\nState Estimation with Extended Kalman Filter\n\n\n\n\n\n\nLocalization\n\n\nMATLAB\n\n\n\n\n\n\n\n\n\nFeb 26, 2023\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n\n\n\n\n\n\nRace Circuit Line Follower\n\n\n\n\n\n\nControl Systems\n\n\nComputer Vision\n\n\nPython\n\n\n\n\n\n\n\n\n\nNov 30, 2022\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAug 17, 2022\n\n\nSuraj K Nair\n\n\n\n\n\n\nNo matching items"
+    "text": "Virtual Maze Exploration and Navigation\n\n\n\n\n\n\nSLAM\n\n\nComputer Vision\n\n\nVisual Odometry\n\n\nPython\n\n\nLocalization\n\n\n\n\n\n\n\n\n\nJul 20, 2024\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n\n\n\n\n\n\nL1 Augmented Geometric Controller\n\n\n\n\n\n\nc++\n\n\nROS\n\n\nControl Systems\n\n\n\n\n\n\n\n\n\nJul 9, 2024\n\n\nSuraj Nair\n\n\n\n\n\n\n\n\n\n\n\n\nSCARA Manipulator: Kinematic Control Part II\n\n\n\n\n\n\nManipulators\n\n\nControl Systems\n\n\nMATLAB\n\n\n\n\n\n\n\n\n\nJun 26, 2024\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n\n\n\n\n\n\nSCARA Manipulator: Kinematic Control Part I\n\n\n\n\n\n\nManipulators\n\n\nControl Systems\n\n\nMATLAB\n\n\n\n\n\n\n\n\n\nJun 25, 2024\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n\n\n\n\n\n\nState Estimation with Unscented Kalman Filter\n\n\n\n\n\n\nState Estimation\n\n\nLocalization\n\n\nMATLAB\n\n\n\n\n\n\n\n\n\nMay 20, 2023\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n\n\n\n\n\n\nVision Based Pose and Velocity Estimation\n\n\n\n\n\n\nComputer Vision\n\n\nLocalization\n\n\nMATLAB\n\n\n\n\n\n\n\n\n\nMar 5, 2023\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n\n\n\n\n\n\nState Estimation with Extended Kalman Filter\n\n\n\n\n\n\nLocalization\n\n\nMATLAB\n\n\n\n\n\n\n\n\n\nFeb 26, 2023\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n\n\n\n\n\n\nRace Circuit Line Follower\n\n\n\n\n\n\nControl Systems\n\n\nComputer Vision\n\n\nPython\n\n\n\n\n\n\n\n\n\nNov 30, 2022\n\n\nSuraj Kiron Nair\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAug 17, 2022\n\n\nSuraj K Nair\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/welcome/index.html",
@@ -250,5 +250,47 @@
     "title": "L1 Augmented Geometric Controller",
     "section": "",
     "text": "Aerial robots are required to remain operational even in the event of system disturbances, damages, or failures to ensure resilient and robust task completion and safety. One common failure case is propeller damage, which presents a significant challenge in both quantification and compensation. In this letter, we propose a novel adaptive control scheme capable of detecting and compensating for multi-rotor propeller damages, ensuring safe and robust flight performances. Our solution combines an L1 adaptive controller with an optimization routine for damage inference and compensation of single or dual propellers, with the capability to seamlessly transition to a fault-tolerant solution in case the damage becomes severe. We experimentally identify the conditions under which the L1 adaptive solution remains preferable over a fault tolerant alternative. Experimental results validate the proposed approach demonstrating the ability of our solution to adapt and compensate onboard in real time on a quadrotor for damages even when multiple propellers are damaged."
+  },
+  {
+    "objectID": "posts/line_follower/index.html#background",
+    "href": "posts/line_follower/index.html#background",
+    "title": "Race Circuit Line Follower",
+    "section": "Background:",
+    "text": "Background:\nThe goal of this project was to perform a PID reactive control capable of following the line painted on a racing circuit. PID control is one of the fundamental concepts of Linear control systems. The Controller continuously calculates an error value as the difference between desired output and the current output and applies a correction based on proportional, integral and derivative terms(denoted by P, I, D respectively). The control signal u[k] for a PID controller can be expressed as follows. \n\nProportional:\nProportional Controller gives an output which is proportional to the current error. The error e[k] is multiplied with a proportional gain(Kp) to get the output. And hence, is 0 if the error is 0.In this case the error is the difference between the center of the image and the centroid of the racing line.\n\n\nIntegral:\nIntegral Controller provides a necessary action to eliminate the offset error which is accumulated by the P Controller.It integrates the error over a period of time until the error value reaches to zero.\n\n\nDerivative:\nDerivative Controller gives an output depending upon the rate of change or error with respect to time. It gives the kick start for the output thereby increasing system response.\nThe integral and dervivative errors are calculated as follows."
+  },
+  {
+    "objectID": "posts/line_follower/index.html#tuning-the-pid-controller.",
+    "href": "posts/line_follower/index.html#tuning-the-pid-controller.",
+    "title": "Race Circuit Line Follower",
+    "section": "Tuning the PID controller.",
+    "text": "Tuning the PID controller.\nFirstly, we must setup the P controller as per Ziegler Nichols method. Keep adjusting the value of the constant, till we get a value where there occurs it has neither unstable oscillations and nor slow response.   \nOnce you get oscillations of constant amplitude you can adjust the derivative gains (Kd). After this the vehicle was much more stable and tracked the line accurately. Finally I modified the Integral gain which I found to have minimal effect on the system. But nonetheless helped to avoid any steady state errors."
+  },
+  {
+    "objectID": "posts/line_follower/index.html#results-and-code",
+    "href": "posts/line_follower/index.html#results-and-code",
+    "title": "Race Circuit Line Follower",
+    "section": "Results and Code",
+    "text": "Results and Code\n\nFinal Code"
+  },
+  {
+    "objectID": "posts/line_follower/index.html#learning",
+    "href": "posts/line_follower/index.html#learning",
+    "title": "Race Circuit Line Follower",
+    "section": "Learning",
+    "text": "Learning\nOne mistake I made was to set the velocity of the car too high. Since the cycle time of the system is only 12Hz the controller could not detect the change in error fast enough. This led to understeer and multiple head on collision with the track walls. It’s always a good idea to start with the minimal speed requirement when programming a controller and increase it once the system is more robust."
+  },
+  {
+    "objectID": "posts/line_follower/index.html#references",
+    "href": "posts/line_follower/index.html#references",
+    "title": "Race Circuit Line Follower",
+    "section": "References:",
+    "text": "References:\nJde Robotics Visual Line Follow What is PID control? MATLAB Discrete time equations for PID control"
+  },
+  {
+    "objectID": "posts/9_SLAM_Maze/index.html",
+    "href": "posts/9_SLAM_Maze/index.html",
+    "title": "Virtual Maze Exploration and Navigation",
+    "section": "",
+    "text": "For this project, the task was to explore a maze of images, mapping the environment as we navigated. Once the map was complete, we were given four target images, and the goal was to locate and navigate to these images as quickly as possible.\nThis was a collaborative effort, where I experimented with various SLAM algorithms, such as ORB SLAM (2&3) and Stella V SLAM. Unfortunately, these methods did not yield accurate results for multiple reasons. First, we had to overcome the Sim-to-Real gap, as SLAM techniques developed for real-world datasets struggled with the simulated environment. Estimating depth posed a major challenge, as implementing depth estimation techniques led to system lag and poor accuracy. Additionally, these algorithms relied on inertial data from IMU sensors for state estimation, but we only had access to visual data in the simulation. While these methods handled linear movement effectively, rotational movements caused severe drift and localization loss.\nWe also tried computationally intensive approaches, such as visual reconstruction using COLMAP, which provided accurate results for smaller maps. However, for larger maps, the increased search space made these methods infeasible to run on our laptop hardware, and since speed was the main performance criterion, we couldn’t afford such solutions.\nUltimately, we developed a custom lightweight approach using Visual Odometry. I implemented a method that utilized homogeneous transformations and the essential matrix to extract the pose (R, t) between frames. We experimented with different features (SIFT, ORB) and matching algorithms, eventually finding that SuperPoint and SuperGlue provided the best tracking performance. Although computationally heavier than traditional methods, the accuracy justified the trade-off.\nWe also explored visual place recognition techniques like VLAD, NetVLAD, and Bag of Visual Words, settling on VLAD for its simplicity and effectiveness in our specific use case.\nOnce the exploration phase was complete, our bot followed the previously mapped path to each target location. This approach allowed us to finish with the fastest time in the competition, earning recognition from Professor Chen Feng.\nLinkedIn Post"
   }
 ]

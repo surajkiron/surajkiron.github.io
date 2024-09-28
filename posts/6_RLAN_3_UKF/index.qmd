@@ -1,10 +1,9 @@
 ---
-title: "Unscented Kalman Filter"
+title: "State Estimation with Unscented Kalman Filter"
 author: "Suraj Kiron Nair"
 date: "2023-05-20"
 categories: [State Estimation, Localization, MATLAB]
 image: "./images/image.jpg"
-draft: "true"
 ---
 In this project, I develop an Unscented Kalman Filter (UKF) to fuse the inertial data already
 used in project 1 and the vision-based pose and velocity estimation developed in project 2.

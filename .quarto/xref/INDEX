@@ -43,5 +43,11 @@
   },
   "posts/9_L1_adaptive_control/index.qmd": {
     "index.html": "a55c3134"
+  },
+  "posts/line_follower/index.qmd": {
+    "index.html": "97e24d83"
+  },
+  "posts/9_SLAM_Maze/index.qmd": {
+    "index.html": "ef2e1ce9"
   }
 }

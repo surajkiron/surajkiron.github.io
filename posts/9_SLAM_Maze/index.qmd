@@ -1,0 +1,22 @@
+---
+title: "Virtual Maze Exploration and Navigation"
+author: "Suraj Kiron Nair"
+date: "2024-07-20"
+categories: [SLAM, Computer Vision, Visual Odometry, Python, Localization]
+image: "image.jpg"
+---
+{{< video https://youtu.be/HBjKWXFlMuE?si=BFV4vJXtsrOL0gE7 >}}
+
+For this project, the task was to explore a maze of images, mapping the environment as we navigated. Once the map was complete, we were given four target images, and the goal was to locate and navigate to these images as quickly as possible.
+
+This was a collaborative effort, where I experimented with various SLAM algorithms, such as ORB SLAM (2&3) and Stella V SLAM. Unfortunately, these methods did not yield accurate results for multiple reasons. First, we had to overcome the Sim-to-Real gap, as SLAM techniques developed for real-world datasets struggled with the simulated environment. Estimating depth posed a major challenge, as implementing depth estimation techniques led to system lag and poor accuracy. Additionally, these algorithms relied on inertial data from IMU sensors for state estimation, but we only had access to visual data in the simulation. While these methods handled linear movement effectively, rotational movements caused severe drift and localization loss.
+
+We also tried computationally intensive approaches, such as visual reconstruction using COLMAP, which provided accurate results for smaller maps. However, for larger maps, the increased search space made these methods infeasible to run on our laptop hardware, and since speed was the main performance criterion, we couldn’t afford such solutions.
+
+Ultimately, we developed a custom lightweight approach using Visual Odometry. I implemented a method that utilized homogeneous transformations and the essential matrix to extract the pose (R, t) between frames. We experimented with different features (SIFT, ORB) and matching algorithms, eventually finding that SuperPoint and SuperGlue provided the best tracking performance. Although computationally heavier than traditional methods, the accuracy justified the trade-off.
+
+We also explored visual place recognition techniques like VLAD, NetVLAD, and Bag of Visual Words, settling on VLAD for its simplicity and effectiveness in our specific use case.
+
+Once the exploration phase was complete, our bot followed the previously mapped path to each target location. This approach allowed us to finish with the fastest time in the competition.
+
+[LinkedIn Post](https://www.linkedin.com/posts/suraj-kiron_its-been-a-fun-semester-in-fall-2023-when-activity-7143833818326593537-I8CJ?utm_source=share&utm_medium=member_desktop)

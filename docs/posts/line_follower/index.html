@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Suraj Kiron Nair">
-<meta name="dcterms.date" content="2023-05-20">
+<meta name="dcterms.date" content="2022-11-30">
 
-<title>Post With Code – Portfolio</title>
+<title>Race Circuit Line Follower – Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -71,10 +71,6 @@ ul.task-list li input[type="checkbox"] {
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Post With Code – Portfolio">
-<meta property="og:description" content="">
-<meta property="og:image" content="image.jpg">
-<meta property="og:site_name" content="Portfolio">
 </head>
 
 <body class="nav-fixed fullcontent">
@@ -123,11 +119,11 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Post With Code</h1>
+      <h1 class="title">Race Circuit Line Follower</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">news</div>
-                <div class="quarto-category">code</div>
-                <div class="quarto-category">analysis</div>
+                <div class="quarto-category">Control Systems</div>
+                <div class="quarto-category">Computer Vision</div>
+                <div class="quarto-category">Python</div>
               </div>
                   </div>
   </div>
@@ -145,7 +141,7 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 20, 2023</p>
+        <p class="date">November 30, 2022</p>
       </div>
     </div>
     
@@ -164,9 +160,44 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>This is a post with executable code.</p>
+<p><img src="thumb1.png" class="img-fluid"></p>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background:<br></h2>
+<p>The goal of this project was to perform a PID reactive control capable of following the line painted on a racing circuit. PID control is one of the fundamental concepts of Linear control systems. The Controller continuously calculates an error value as the difference between desired output and the current output and applies a correction based on proportional, integral and derivative terms(denoted by P, I, D respectively). The control signal u[k] for a PID controller can be expressed as follows.<br> <img src="eqn1.png" class="img-fluid quarto-figure quarto-figure-center"><br></p>
+<section id="proportional" class="level3">
+<h3 class="anchored" data-anchor-id="proportional">Proportional:<br></h3>
+<p>Proportional Controller gives an output which is proportional to the current error. The error e[k] is multiplied with a proportional gain(Kp) to get the output. And hence, is 0 if the error is 0.In this case the error is the difference between the center of the image and the centroid of the racing line.</p>
+</section>
+<section id="integral" class="level3">
+<h3 class="anchored" data-anchor-id="integral">Integral:<br></h3>
+<p>Integral Controller provides a necessary action to eliminate the offset error which is accumulated by the P Controller.It integrates the error over a period of time until the error value reaches to zero.</p>
+</section>
+<section id="derivative" class="level3">
+<h3 class="anchored" data-anchor-id="derivative">Derivative:<br></h3>
+<p>Derivative Controller gives an output depending upon the rate of change or error with respect to time. It gives the kick start for the output thereby increasing system response.</p>
+<p>The integral and dervivative errors are calculated as follows. <img src="eqn2.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="tuning-the-pid-controller." class="level2">
+<h2 class="anchored" data-anchor-id="tuning-the-pid-controller.">Tuning the PID controller.</h2>
+<p>Firstly, we must setup the P controller as per Ziegler Nichols method. Keep adjusting the value of the constant, till we get a value where there occurs it has neither unstable oscillations and nor slow response. <br> <img src="https://jderobot.github.io/RoboticsAcademy/assets/images/exercises/follow_line/oscillations.gif" class="img-fluid" style="width:45.0%" alt="Unstable Oscillations"> <img src="https://jderobot.github.io/RoboticsAcademy/assets/images/exercises/follow_line/slowresponse.gif" class="img-fluid" style="width:45.0%" alt="Slow response"><br></p>
+<p>Once you get oscillations of constant amplitude you can adjust the derivative gains (Kd). After this the vehicle was much more stable and tracked the line accurately. Finally I modified the Integral gain which I found to have minimal effect on the system. But nonetheless helped to avoid any steady state errors.</p>
+</section>
+<section id="results-and-code" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-code">Results and Code</h2>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/EW6XV_7osU8" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p><a href="https://github.com/surajkiron/Robotics-Projects/tree/53683d38234db869c967596dfe763f2cc7708142/VisualLineFollow">Final Code</a></p>
+</section>
+<section id="learning" class="level2">
+<h2 class="anchored" data-anchor-id="learning">Learning</h2>
+<p>One mistake I made was to set the velocity of the car too high. Since the cycle time of the system is only 12Hz the controller could not detect the change in error fast enough. This led to understeer and multiple head on collision with the track walls. It’s always a good idea to start with the minimal speed requirement when programming a controller and increase it once the system is more robust.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References:<br></h2>
+<p><a href="https://jderobot.github.io/RoboticsAcademy/exercises/AutonomousCars/follow_line/">Jde Robotics Visual Line Follow</a><br> <a href="https://www.youtube.com/watch?v=wkfEZmsQqiA&amp;list=PLn8PRpmsu08pQBgjxYFXSsODEF3Jqmm-y&amp;ab_channel=MATLAB">What is PID control? MATLAB</a><br> <a href="https://engineering.stackexchange.com/questions/26537/what-is-a-definitive-discrete-pid-controller-equation">Discrete time equations for PID control</a><br></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
