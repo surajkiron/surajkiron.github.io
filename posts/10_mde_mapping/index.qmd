@@ -1,0 +1,18 @@
+---
+title: "Monocular Depth Estimation Mapping with Depth Anything V2"
+author: "Suraj Kiron Nair"
+date: "2025-01-01"
+categories: [SLAM, C++, ROS, Computer Vision, 3D Reconstruction]
+image: "image.png"
+---
+
+This is a demonstration of the MDE mapping pipeline on a dataset collected at the NYU Tandon campus at Brooklyn Commons. The pipeline is using Depth Anything V2 to generate
+context based disparity. This is used to generate the unscaled depth image(bottom left), which is then scaled using the sparse depth of the Realsense D455(top left). The Depth Anything V2 Vit-s model is optimized to run on Nvidia Jestson devices using Nvidia TensorRT to achieve 60fps inference.  The resulting system is capable of accurately mapping outdoor environments in real time at 30hz. The system is using OpenVins for localization.
+
+
+{{< video https://youtu.be/tkEgf9fXUBc >}}
+
+
+### References:
+
+[Reactive Collision Avoidance for Safe Agile Navigation](https://arxiv.org/abs/2409.11962)<br/>

@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/10_mde_mapping/index.html",
       "/posts/9_SLAM_Maze/index.html",
       "/posts/3_L1_Adaptive_Control/index.html",
       "/posts/8_Manipulator_Obstacle_Avoidance/index.html",

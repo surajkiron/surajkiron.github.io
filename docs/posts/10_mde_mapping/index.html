@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Suraj Kiron Nair">
-<meta name="dcterms.date" content="2023-05-20">
+<meta name="dcterms.date" content="2025-01-01">
 
-<title>Post With Code – Portfolio</title>
+<title>Monocular Depth Estimation Mapping with Depth Anything V2 – Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -119,11 +119,13 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Post With Code</h1>
+      <h1 class="title">Monocular Depth Estimation Mapping with Depth Anything V2</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">news</div>
-                <div class="quarto-category">code</div>
-                <div class="quarto-category">analysis</div>
+                <div class="quarto-category">SLAM</div>
+                <div class="quarto-category">C++</div>
+                <div class="quarto-category">ROS</div>
+                <div class="quarto-category">Computer Vision</div>
+                <div class="quarto-category">3D Reconstruction</div>
               </div>
                   </div>
   </div>
@@ -141,7 +143,7 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 20, 2023</p>
+        <p class="date">January 1, 2025</p>
       </div>
     </div>
     
@@ -160,9 +162,14 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>This is a post with executable code.</p>
+<p>This is a demonstration of the MDE mapping pipeline on a dataset collected at the NYU Tandon campus at Brooklyn Commons. The pipeline is using Depth Anything V2 to generate context based disparity. This is used to generate the unscaled depth image(bottom left), which is then scaled using the sparse depth of the Realsense D455(top left). The Depth Anything V2 Vit-s model is optimized to run on Nvidia Jestson devices using Nvidia TensorRT to achieve 60fps inference. The resulting system is capable of accurately mapping outdoor environments in real time at 30hz. The system is using OpenVins for localization.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/tkEgf9fXUBc" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References:</h3>
+<p><a href="https://arxiv.org/abs/2409.11962">Reactive Collision Avoidance for Safe Agile Navigation</a><br></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
